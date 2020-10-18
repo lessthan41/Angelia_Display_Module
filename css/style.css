@@ -1,0 +1,14 @@
+
+/* For Development */
+.mdl-cell {
+    background-color: aliceblue;
+}
+
+.container {
+    height: -webkit-fill-available;
+}
+
+#map {
+    height: 100%;
+    width: 100%;
+}
