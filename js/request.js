@@ -44,3 +44,15 @@ function getDistrict(select) {
             // console.log('I always Execued');
         });
 }
+
+function getVillJson() {
+    var url = 'https://raw.githubusercontent.com/lessthan41/Angelia_Display_Module/master/asset/TW_Dist_simplified.geojson'
+    axios.get(url)
+        .then(function (response) {
+            let data = response.data;
+            mapDistrict(data);
+        })
+        .catch(function (error) {
+            console.log(error);
+        })
+}

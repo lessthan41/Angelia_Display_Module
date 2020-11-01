@@ -45,12 +45,12 @@ var drawLayer = new ol.layer.Vector({
     }
 });
 var highlightStyle = new ol.style.Style({
-  fill: new ol.style.Fill({
-    color: 'rgba(149, 196, 187,0.7)',
-  }),
+    fill: new ol.style.Fill({
+        color: 'rgba(149, 196, 187,0.7)',
+    }),
 });
 
-function getStyle (countyName) {
+function getStyle(countyName) {
     var percentage;
     var color;
 
@@ -94,10 +94,49 @@ function getStyle (countyName) {
     );
 }
 
+function mySource(vill_geojson, county_name) {
+    var feature, vectorSource;
+    var item = vill_geojson;
+    var new_item = {
+        "type": "FeatureCollection",
+        "name": "TW_Vill_simplified",
+        "crs": {
+            "properties": {
+                "name": "urn:ogc:def:crs:EPSG::3824"
+            },
+            "type": "name"
+        },
+        "features": {}
+    };
+
+    let count = 0;
+    for (i in item["features"]) {
+        coor = [];
+        for (j in item["features"][i]['geometry']['coordinates'][0]) {
+            coor[j] = ol.proj.fromLonLat(item["features"][i]['geometry']['coordinates'][0][j]);
+        }
+        if (item['features'][i]["properties"]["COUNTYNAME"] == county_name) {
+            new_item['features'][count] = item['features'][i];
+            for (j in new_item['features'][count]["geometry"]["coordinates"][0]) {
+                new_item['features'][count]["geometry"]["coordinates"][0][j] = coor[j];
+            }
+            count = count + 1;
+        }
+    }
+
+    new_item["features"] = Object.values(new_item["features"]);
+    feature = (new ol.format.GeoJSON()).readFeatures(new_item);
+    vectorSource = new ol.source.Vector({
+        features: feature
+    });
+
+    return vectorSource;
+}
+
 function mapInit() {
     var selected = null;
     var hoverDiv = document.getElementById('hoverDiv');
-    var city = document.getElementById('cityName');
+    var name = document.getElementById('cityName');
 
     var map = new ol.Map({
         target: 'map',
@@ -105,51 +144,51 @@ function mapInit() {
         view: view
     });
 
-    map.on('pointermove', function (e) {
+    map.on('pointermove', function(e) {
         if (selected !== null) {
             selected.setStyle(undefined);
             selected = null;
         }
-        map.forEachFeatureAtPixel(e.pixel, function (f) {
+        map.forEachFeatureAtPixel(e.pixel, function(f) {
             selected = f;
             f.setStyle(highlightStyle);
             return true;
         });
         if (selected) {
-            var x = event.clientX, y = event.clientY;
+            var x = event.clientX,
+                y = event.clientY;
             hoverDiv.style.marginLeft = x;
             hoverDiv.style.marginTop = y;
             hoverDiv.style.opacity = 1;
-            city.innerHTML = '縣市： ' + selected.get('COUNTYNAME');
+            name.innerHTML = '縣市： ' + selected.get('COUNTYNAME');
         } else {
             hoverDiv.style.opacity = 0;
-            city.innerHTML = '縣市： ';
+            name.innerHTML = '縣市： ';
         }
     });
 
     document.getElementById("map").data = map; // store info in #map
 }
 
-function mapDistrict(select) {
+function mapDistrict(vill_geojson) {
+    let select = document.getElementById('countySel');
     var county_name = select.options[select.selectedIndex].innerHTML;
     var map = document.getElementById('map').data;
-    var nameStyle = new ol.style.Style({});
-    var source = new ol.source.Vector({
-        url: 'https://raw.githubusercontent.com/lessthan41/Angelia_Display_Module/master/asset/TW_Dist_simplified.geojson',
-        format: new ol.format.GeoJSON()
-    });
-    var style = function(feature) {
+    var nameStyle = new ol.style.Style({}); // don't label name
+    var source = mySource(vill_geojson, county_name); // filter county
+    var style = function(feature) { // color
         let style = getStyle(feature.get('TOWNNAME'));
         return style;
     }
+
     map.getLayers().getArray()[1].setSource(source);
     map.getLayers().getArray()[1].setStyle(style);
     map.getLayers().getArray()[2].setStyle(nameStyle);
 
-    var town = document.getElementById('cityName');
-    map.on('pointermove', function (e) {
-        map.forEachFeatureAtPixel(e.pixel, function (f) {
-            town.innerHTML = '地區： ' + f.get('TOWNNAME');
+    var name = document.getElementById('cityName');
+    map.on('pointermove', function(e) {
+        map.forEachFeatureAtPixel(e.pixel, function(f) {
+            name.innerHTML = '地區： ' + f.get('TOWNNAME');
             return true;
         });
     });
