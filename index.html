@@ -10,14 +10,47 @@
 </head>
 
 <body>
-    <div class="mdl-grid container">
-        <div class="mdl-cell mdl-cell--3-col">
-            
+    <div class="mdl-grid mycontainer">
+        <div class="mdl-cell mdl-cell--2-col">
+            <div id="selectDiv">
+                <div class="sel">
+                    <select class="form-control">
+                        <option>請選擇事件</option>
+                    </select>
+                </div>
+                <div class="sel">
+                    <select class="form-control" id="countySel" onchange="changeCounty(this); getDistrict(this); mapDistrict(this)">
+                        <option>請選擇縣市</option>
+                    </select>
+                </div>
+                <div class="sel">
+                    <select class="form-control" id="districtSel">
+                        <option>請選擇鄉鎮市區</option>
+                    </select>
+                </div>
+                <div class="sel">
+                    <select class="form-control">
+                        <option>請選擇村里</option>
+                    </select>
+                </div>
+            </div>
         </div>
         <div class="mdl-cell mdl-cell--5-col">
+            <!-- <svg id="map"></svg> -->
             <div id="map"></div>
         </div>
-        <div class="mdl-cell mdl-cell--4-col"></div>
+        <div id="hoverDiv">
+            <div class="word">
+                <span id="cityName">縣市：</span>
+            </div>
+            <div class="word">
+                <span>填答率：</span>
+            </div>
+        </div>
+        <div class="mdl-cell mdl-cell--5-col">
+            <div id="chartDiv">
+            </div>
+        </div>
     </div>
 
     <!-- MDL -->
@@ -29,9 +62,22 @@
     <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.4.3/build/ol.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.4.3/css/ol.css">
 
+    <!-- d3.js -->
+    <!-- <script src="https://d3js.org/d3.v4.js"></script>
+    <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+    <script src="https://d3js.org/d3-geo-projection.v2.min.js"></script> -->
+
+    <!-- BootStrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <!-- axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
     <!-- my script -->
     <script type="text/javascript" src='./js/index.js'></script>
     <script type="text/javascript" src='./js/map.js'></script>
+    <script type="text/javascript" src='./js/mapZoom.js'></script>
+    <script type="text/javascript" src='./js/request.js'></script>
 </body>
 
 </html>
