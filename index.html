@@ -14,23 +14,18 @@
         <div class="mdl-cell mdl-cell--2-col">
             <div id="selectDiv">
                 <div class="sel">
-                    <select class="form-control">
+                    <select class="form-control" id="eventSel">
                         <option>請選擇事件</option>
                     </select>
                 </div>
                 <div class="sel">
-                    <select class="form-control" id="countySel" onchange="changeCounty(this); getDistrict(this); getVillJson();">
+                    <select class="form-control" id="countySel" onchange="changeCounty(); getDistrict(); getDistrictGeojson();">
                         <option>請選擇縣市</option>
                     </select>
                 </div>
                 <div class="sel">
                     <select class="form-control" id="districtSel">
                         <option>請選擇鄉鎮市區</option>
-                    </select>
-                </div>
-                <div class="sel">
-                    <select class="form-control">
-                        <option>請選擇村里</option>
                     </select>
                 </div>
             </div>

@@ -13,7 +13,7 @@ var rasterLayer = new ol.layer.Tile({
 var nameLayer = new ol.layer.Vector({
     renderMode: 'image',
     source: new ol.source.Vector({
-        url: 'https://raw.githubusercontent.com/Bourbon0212/Diana-Visualization/master/assets/twCounty.geojson',
+        url: 'https://raw.githubusercontent.com/lessthan41/Angelia_Display_Module/master/asset/TW_County.geojson',
         format: new ol.format.GeoJSON()
     }),
     style: function(feature) {
@@ -29,33 +29,59 @@ var nameLayer = new ol.layer.Vector({
                 }),
             })
         });
-        style.getText().setText(feature.get("COUNTYNAME"));
+        style.getText().setText(feature.get('COUNTYNAME'));
         return style;
     },
 });
 var drawLayer = new ol.layer.Vector({
     source: new ol.source.Vector({
-        url: 'https://raw.githubusercontent.com/Bourbon0212/Diana-Visualization/master/assets/twCounty.geojson',
+        url: 'https://raw.githubusercontent.com/lessthan41/Angelia_Display_Module/master/asset/TW_County.geojson',
         // url: 'https://raw.githubusercontent.com/lessthan41/Angelia_Display_Module/master/asset/TW_Vill_simplified.geojson',
         format: new ol.format.GeoJSON()
     }),
-    style: function(feature) {
-        let style = getStyle(feature.get('COUNTYNAME'));
-        return style;
-    }
 });
 var highlightStyle = new ol.style.Style({
     fill: new ol.style.Fill({
         color: 'rgba(149, 196, 187,0.7)',
     }),
 });
+var map = new ol.Map({
+    target: 'map',
+    layers: [rasterLayer, drawLayer, nameLayer],
+    view: view
+});
 
-function getStyle(countyName) {
+var selected = null;
+map.on('pointermove', function(e) {
+    if (selected !== null) {
+        selected.setStyle(undefined);
+        selected = null;
+    }
+    map.forEachFeatureAtPixel(e.pixel, function(f) {
+        selected = f;
+        f.setStyle(highlightStyle);
+        return true;
+    });
+    if (selected) {
+        var x = event.clientX,
+            y = event.clientY;
+        hoverDiv.style.marginLeft = x;
+        hoverDiv.style.marginTop = y;
+        hoverDiv.style.opacity = 1;
+    } else {
+        hoverDiv.style.opacity = 0;
+    }
+});
+
+document.getElementById('map').data = map; // store info in #map
+
+function getStyle(data, countyId) {
     var percentage;
     var color;
-
-    // percentage = +overallData[countyName]["check_ratio"];
-    percentage = 1;
+    for (i in data) {
+        if (countyId.startsWith(i))
+            percentage = data[i]['img_ratio']; // TO BE CONTINUED
+    }
     switch (true) {
         case (percentage < 0.4):
             color = [23, 156, 3, 0.1];
@@ -98,44 +124,44 @@ function mySource(vill_geojson, county_name) {
     var feature, vectorSource;
     var item = vill_geojson;
     var new_item = {
-        "type": "FeatureCollection",
-        "features": []
+        'type': 'FeatureCollection',
+        'features': []
     };
 
-    for (i in item["features"]) {
-        if (item['features'][i]["properties"]["COUNTYNAME"] == county_name) {
-            if (item['features'][i]["geometry"]["type"] == "Polygon") {
+    for (i in item['features']) {
+        if (item['features'][i]['properties']['COUNTYNAME'] == county_name) {
+            if (item['features'][i]['geometry']['type'] == 'Polygon') {
                 let polygon = [];
                 let _coor;
-                for (j in item["features"][i]['geometry']['coordinates'][0]) {
-                    _coor = ol.proj.fromLonLat(item["features"][i]['geometry']['coordinates'][0][j]);
+                for (j in item['features'][i]['geometry']['coordinates'][0]) {
+                    _coor = ol.proj.fromLonLat(item['features'][i]['geometry']['coordinates'][0][j]);
                     polygon.push(_coor);
                 }
                 new_item['features'].push(item['features'][i]);
                 let len = new_item['features'].length - 1;
-                for (j in new_item['features'][len]["geometry"]["coordinates"][0]) {
-                    new_item['features'][len]["geometry"]["coordinates"][0][j] = polygon[j];
+                for (j in new_item['features'][len]['geometry']['coordinates'][0]) {
+                    new_item['features'][len]['geometry']['coordinates'][0][j] = polygon[j];
                 }
             }
             else { // multi-polygon
 
                 let polygon_collection = [];
-                for (j in item["features"][i]['geometry']['coordinates']) {
+                for (j in item['features'][i]['geometry']['coordinates']) {
                     let polygon = [];
                     let _coor;
-                    for (k in item["features"][i]['geometry']['coordinates'][j][0]) {
-                        _coor = ol.proj.fromLonLat(item["features"][i]['geometry']['coordinates'][j][0][k]);
+                    for (k in item['features'][i]['geometry']['coordinates'][j][0]) {
+                        _coor = ol.proj.fromLonLat(item['features'][i]['geometry']['coordinates'][j][0][k]);
                         polygon.push(_coor);
                     }
                     polygon_collection.push([polygon]);
                 }
                 new_item['features'].push(item['features'][i]);
-                new_item['features'][new_item['features'].length - 1]["geometry"]["coordinates"] = polygon_collection;
+                new_item['features'][new_item['features'].length - 1]['geometry']['coordinates'] = polygon_collection;
             }
         }
     }
 
-    new_item["features"] = Object.values(new_item["features"]);
+    new_item['features'] = Object.values(new_item['features']);
     feature = (new ol.format.GeoJSON()).readFeatures(new_item);
     vectorSource = new ol.source.Vector({
         features: feature
@@ -144,41 +170,21 @@ function mySource(vill_geojson, county_name) {
     return vectorSource;
 }
 
-function mapInit() {
-    var selected = null;
+function mapCounty(data) {
     var hoverDiv = document.getElementById('hoverDiv');
     var name = document.getElementById('cityName');
+    var style = function(feature) { // color
+        let style = getStyle(data, feature.get('COUNTYSN'));
+        return style;
+    };
 
-    var map = new ol.Map({
-        target: 'map',
-        layers: [rasterLayer, drawLayer, nameLayer],
-        view: view
-    });
-
+    map.getLayers().getArray()[1].setStyle(style);
     map.on('pointermove', function(e) {
-        if (selected !== null) {
-            selected.setStyle(undefined);
-            selected = null;
-        }
         map.forEachFeatureAtPixel(e.pixel, function(f) {
-            selected = f;
-            f.setStyle(highlightStyle);
+            name.innerHTML = '縣市： ' + f.get('COUNTYNAME');
             return true;
         });
-        if (selected) {
-            var x = event.clientX,
-                y = event.clientY;
-            hoverDiv.style.marginLeft = x;
-            hoverDiv.style.marginTop = y;
-            hoverDiv.style.opacity = 1;
-            name.innerHTML = '縣市： ' + selected.get('COUNTYNAME');
-        } else {
-            hoverDiv.style.opacity = 0;
-            name.innerHTML = '縣市： ';
-        }
     });
-
-    document.getElementById("map").data = map; // store info in #map
 }
 
 function mapDistrict(vill_geojson) {
@@ -187,10 +193,10 @@ function mapDistrict(vill_geojson) {
     var map = document.getElementById('map').data;
     var nameStyle = new ol.style.Style({}); // don't label name
     var source = mySource(vill_geojson, county_name); // filter county
-    var style = function(feature) { // color
-        let style = getStyle(feature.get('TOWNNAME'));
+    var style = function(feature, data) { // color
+        let style = getStyle(data, feature.get('TOWNID'));
         return style;
-    }
+    };
 
     map.getLayers().getArray()[1].setSource(source);
     map.getLayers().getArray()[1].setStyle(style);
@@ -203,5 +209,4 @@ function mapDistrict(vill_geojson) {
             return true;
         });
     });
-
 }

@@ -1,5 +1,5 @@
 window.onload = function() {
-    mapInit();
+    getAllEvent();
     getCounty();
     document.body.style.visibility = 'visible';
 };

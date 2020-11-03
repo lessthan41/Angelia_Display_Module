@@ -63,7 +63,8 @@ function moveCounty(county) {
     doPan(county[1]);
 }
 
-function changeCounty(select) {
-    let countyName = select.options[select.selectedIndex].innerHTML;
+function changeCounty() {
+    let select = document.getElementById('countySel');
+    let countyName = document.getElementById('countySel').options[select.selectedIndex].innerHTML;
     moveCounty(counties[countyName]);
 }
