@@ -99,28 +99,39 @@ function mySource(vill_geojson, county_name) {
     var item = vill_geojson;
     var new_item = {
         "type": "FeatureCollection",
-        "name": "TW_Vill_simplified",
-        "crs": {
-            "properties": {
-                "name": "urn:ogc:def:crs:EPSG::3824"
-            },
-            "type": "name"
-        },
-        "features": {}
+        "features": []
     };
 
-    let count = 0;
     for (i in item["features"]) {
-        coor = [];
-        for (j in item["features"][i]['geometry']['coordinates'][0]) {
-            coor[j] = ol.proj.fromLonLat(item["features"][i]['geometry']['coordinates'][0][j]);
-        }
         if (item['features'][i]["properties"]["COUNTYNAME"] == county_name) {
-            new_item['features'][count] = item['features'][i];
-            for (j in new_item['features'][count]["geometry"]["coordinates"][0]) {
-                new_item['features'][count]["geometry"]["coordinates"][0][j] = coor[j];
+            if (item['features'][i]["geometry"]["type"] == "Polygon") {
+                let polygon = [];
+                let _coor;
+                for (j in item["features"][i]['geometry']['coordinates'][0]) {
+                    _coor = ol.proj.fromLonLat(item["features"][i]['geometry']['coordinates'][0][j]);
+                    polygon.push(_coor);
+                }
+                new_item['features'].push(item['features'][i]);
+                let len = new_item['features'].length - 1;
+                for (j in new_item['features'][len]["geometry"]["coordinates"][0]) {
+                    new_item['features'][len]["geometry"]["coordinates"][0][j] = polygon[j];
+                }
             }
-            count = count + 1;
+            else { // multi-polygon
+
+                let polygon_collection = [];
+                for (j in item["features"][i]['geometry']['coordinates']) {
+                    let polygon = [];
+                    let _coor;
+                    for (k in item["features"][i]['geometry']['coordinates'][j][0]) {
+                        _coor = ol.proj.fromLonLat(item["features"][i]['geometry']['coordinates'][j][0][k]);
+                        polygon.push(_coor);
+                    }
+                    polygon_collection.push([polygon]);
+                }
+                new_item['features'].push(item['features'][i]);
+                new_item['features'][new_item['features'].length - 1]["geometry"]["coordinates"] = polygon_collection;
+            }
         }
     }
 
