@@ -4,7 +4,7 @@
         {
             "type": "Feature",
             "properties": {
-                "COUNTYSN": "10014",
+                "COUNTYID": "10014",
                 "COUNTYNAME": "臺東縣",
                 "name": "臺東縣"
             },
@@ -1069,7 +1069,7 @@
         {
             "type": "Feature",
             "properties": {
-                "COUNTYSN": "10002",
+                "COUNTYID": "10002",
                 "COUNTYNAME": "宜蘭縣",
                 "name": "宜蘭縣"
             },
@@ -1674,7 +1674,7 @@
         {
             "type": "Feature",
             "properties": {
-                "COUNTYSN": "63",
+                "COUNTYID": "63",
                 "COUNTYNAME": "臺北市",
                 "name": "臺北市"
             },
@@ -1909,7 +1909,7 @@
         {
             "type": "Feature",
             "properties": {
-                "COUNTYSN": "10009",
+                "COUNTYID": "10009",
                 "COUNTYNAME": "雲林縣",
                 "name": "雲林縣"
             },
@@ -2462,7 +2462,7 @@
         {
             "type": "Feature",
             "properties": {
-                "COUNTYSN": "68",
+                "COUNTYID": "68",
                 "COUNTYNAME": "桃園市",
                 "name": "桃園市"
             },
@@ -2969,7 +2969,7 @@
         {
             "type": "Feature",
             "properties": {
-                "COUNTYSN": "10013",
+                "COUNTYID": "10013",
                 "COUNTYNAME": "屏東縣",
                 "name": "屏東縣"
             },
@@ -3750,7 +3750,7 @@
         {
             "type": "Feature",
             "properties": {
-                "COUNTYSN": "66",
+                "COUNTYID": "66",
                 "COUNTYNAME": "臺中市",
                 "name": "臺中市"
             },
@@ -4425,7 +4425,7 @@
         {
             "type": "Feature",
             "properties": {
-                "COUNTYSN": "67",
+                "COUNTYID": "67",
                 "COUNTYNAME": "臺南市",
                 "name": "臺南市"
             },
@@ -4900,7 +4900,7 @@
         {
             "type": "Feature",
             "properties": {
-                "COUNTYSN": "10017",
+                "COUNTYID": "10017",
                 "COUNTYNAME": "基隆市",
                 "name": "基隆市"
             },
@@ -5051,7 +5051,7 @@
         {
             "type": "Feature",
             "properties": {
-                "COUNTYSN": "9007",
+                "COUNTYID": "9007",
                 "COUNTYNAME": "連江縣",
                 "name": "連江縣"
             },
@@ -5212,7 +5212,7 @@
         {
             "type": "Feature",
             "properties": {
-                "COUNTYSN": "10008",
+                "COUNTYID": "10008",
                 "COUNTYNAME": "南投縣",
                 "name": "南投縣"
             },
@@ -6023,7 +6023,7 @@
         {
             "type": "Feature",
             "properties": {
-                "COUNTYSN": "10016",
+                "COUNTYID": "10016",
                 "COUNTYNAME": "澎湖縣",
                 "name": "澎湖縣"
             },
@@ -6520,7 +6520,7 @@
         {
             "type": "Feature",
             "properties": {
-                "COUNTYSN": "10005",
+                "COUNTYID": "10005",
                 "COUNTYNAME": "苗栗縣",
                 "name": "苗栗縣"
             },
@@ -6995,7 +6995,7 @@
         {
             "type": "Feature",
             "properties": {
-                "COUNTYSN": "10020",
+                "COUNTYID": "10020",
                 "COUNTYNAME": "嘉義市",
                 "name": "嘉義市"
             },
@@ -7102,7 +7102,7 @@
         {
             "type": "Feature",
             "properties": {
-                "COUNTYSN": "10004",
+                "COUNTYID": "10004",
                 "COUNTYNAME": "新竹縣",
                 "name": "新竹縣"
             },
@@ -7665,7 +7665,7 @@
         {
             "type": "Feature",
             "properties": {
-                "COUNTYSN": "65",
+                "COUNTYID": "65",
                 "COUNTYNAME": "新北市",
                 "name": "新北市"
             },
@@ -8618,7 +8618,7 @@
         {
             "type": "Feature",
             "properties": {
-                "COUNTYSN": "10015",
+                "COUNTYID": "10015",
                 "COUNTYNAME": "花蓮縣",
                 "name": "花蓮縣"
             },
@@ -9573,7 +9573,7 @@
         {
             "type": "Feature",
             "properties": {
-                "COUNTYSN": "64",
+                "COUNTYID": "64",
                 "COUNTYNAME": "高雄市",
                 "name": "高雄市"
             },
@@ -10392,7 +10392,7 @@
         {
             "type": "Feature",
             "properties": {
-                "COUNTYSN": "10007",
+                "COUNTYID": "10007",
                 "COUNTYNAME": "彰化縣",
                 "name": "彰化縣"
             },
@@ -10731,7 +10731,7 @@
         {
             "type": "Feature",
             "properties": {
-                "COUNTYSN": "10010",
+                "COUNTYID": "10010",
                 "COUNTYNAME": "嘉義縣",
                 "name": "嘉義縣"
             },
@@ -11548,7 +11548,7 @@
         {
             "type": "Feature",
             "properties": {
-                "COUNTYSN": "9020",
+                "COUNTYID": "9020",
                 "COUNTYNAME": "金門縣",
                 "name": "金門縣"
             },
@@ -11773,7 +11773,7 @@
         {
             "type": "Feature",
             "properties": {
-                "COUNTYSN": "10018",
+                "COUNTYID": "10018",
                 "COUNTYNAME": "新竹市",
                 "name": "新竹市"
             },
