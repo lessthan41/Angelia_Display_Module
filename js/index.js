@@ -1,5 +1,22 @@
 window.onload = function() {
     getAllEvent();
-    getCounty();
+    getCountyList();
     document.body.style.visibility = 'visible';
 };
+
+function changeEventSel() {
+    getCountyRatio();
+    globalScope();
+    hideTable();
+}
+
+function changeCountySel() {
+    changeCounty();
+    getDistrictList();
+    getDistrictGeojson();
+    hideTable();
+}
+
+function changeDistrictSel() {
+    getVillageList();
+}

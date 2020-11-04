@@ -10,41 +10,69 @@
 </head>
 
 <body>
-    <div class="mdl-grid mycontainer">
-        <div class="mdl-cell mdl-cell--2-col">
-            <div id="selectDiv">
-                <div class="sel">
-                    <select class="form-control" id="eventSel">
-                        <option>請選擇事件</option>
-                    </select>
-                </div>
-                <div class="sel">
-                    <select class="form-control" id="countySel" onchange="changeCounty(); getDistrict(); getDistrictGeojson();">
-                        <option>請選擇縣市</option>
-                    </select>
-                </div>
-                <div class="sel">
-                    <select class="form-control" id="districtSel">
-                        <option>請選擇鄉鎮市區</option>
-                    </select>
-                </div>
+    <div id="selectDiv" class="card">
+        <div class="sel">
+            <div class="selTitle">
+                <span>事件：</span>
             </div>
+            <select class="form-control" id="eventSel" onchange="changeEvent();">
+                <option>請選擇事件</option>
+            </select>
         </div>
-        <div class="mdl-cell mdl-cell--5-col">
-            <!-- <svg id="map"></svg> -->
-            <div id="map"></div>
+        <div class="sel">
+            <div class="selTitle">
+                <span>縣市：</span>
+            </div>
+            <select class="form-control" id="countySel" onchange="changeCountySel();">
+                <option>請選擇縣市</option>
+            </select>
         </div>
-        <div id="hoverDiv">
-            <div class="word">
-                <span id="cityName">縣市：</span>
+        <div class="sel">
+            <div class="selTitle">
+                <span>鄉鎮市區：</span>
             </div>
-            <div class="word">
-                <span>填答率：</span>
-            </div>
+            <select class="form-control" id="districtSel" onchange="changeDistrictSel();">
+                <option>請選擇鄉鎮市區</option>
+            </select>
         </div>
-        <div class="mdl-cell mdl-cell--5-col">
-            <div id="chartDiv">
-            </div>
+    </div>
+    <div id="map"></div>
+    <div id="hoverDiv">
+        <div class="word">
+            <span id="cityName">縣市：</span>
+        </div>
+        <div class="word">
+            <span id="fillRatio">填答率：</span>
+        </div>
+    </div>
+    <div id="tableDiv" class="card">
+        <div class="card-body">
+            <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp" id='table'>
+                <thead>
+                    <tr>
+                        <th class="mdl-data-table__cell--non-numeric">村里</th>
+                        <th>負責人</th>
+                        <th>詳細填答</th>
+                    </tr>
+                </thead>
+                <tbody id='tbody'>
+                    <tr>
+                        <td class="mdl-data-table__cell--non-numeric">Acrylic (Transparent)</td>
+                        <td>25</td>
+                        <td>$2.90</td>
+                    </tr>
+                    <tr>
+                        <td class="mdl-data-table__cell--non-numeric">Plywood (Birch)</td>
+                        <td>50</td>
+                        <td>$1.25</td>
+                    </tr>
+                    <tr>
+                        <td class="mdl-data-table__cell--non-numeric">Laminate (Gold on Blue)</td>
+                        <td>10</td>
+                        <td>$2.35</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 
@@ -57,11 +85,6 @@
     <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.4.3/build/ol.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.4.3/css/ol.css">
 
-    <!-- d3.js -->
-    <!-- <script src="https://d3js.org/d3.v4.js"></script>
-    <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
-    <script src="https://d3js.org/d3-geo-projection.v2.min.js"></script> -->
-
     <!-- BootStrap -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
@@ -73,6 +96,7 @@
     <script type="text/javascript" src='./js/map.js'></script>
     <script type="text/javascript" src='./js/mapZoom.js'></script>
     <script type="text/javascript" src='./js/request.js'></script>
+    <script type="text/javascript" src='./js/table.js'></script>
 </body>
 
 </html>

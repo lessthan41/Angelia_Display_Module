@@ -58,6 +58,17 @@ function doZoom(location) {
     });
 }
 
+function globalScope() {
+    view.animate({
+        zoom: 7.6,
+        duration: 1500
+    });
+    view.animate({
+        center: ol.proj.fromLonLat([121.8, 23.8]),
+        duration: 1500
+    });
+}
+
 function moveCounty(county) {
     doZoom(county[0]);
     doPan(county[1]);

@@ -1,8 +1,8 @@
 // setting
 var view = new ol.View({
-    center: ol.proj.fromLonLat([121, 23.5]),
+    center: ol.proj.fromLonLat([121.8, 23.8]),
     minZoom: 7.2,
-    zoom: 7.5
+    zoom: 7.6
 });
 var rasterLayer = new ol.layer.Tile({
     source: new ol.source.XYZ({
@@ -75,12 +75,13 @@ map.on('pointermove', function(e) {
 
 document.getElementById('map').data = map; // store info in #map
 
-function getStyle(data, countyId) {
+function getStyle(data, regionId) {
     var percentage;
     var color;
     for (i in data) {
-        if (countyId.startsWith(i))
+        if (regionId.startsWith(i) || i.startsWith(regionId)) {
             percentage = data[i]['img_ratio']; // TO BE CONTINUED
+        }
     }
     switch (true) {
         case (percentage < 0.4):
@@ -120,16 +121,16 @@ function getStyle(data, countyId) {
     );
 }
 
-function mySource(vill_geojson, county_name) {
+function mySource(geojson, countyName) {
     var feature, vectorSource;
-    var item = vill_geojson;
+    var item = geojson;
     var new_item = {
         'type': 'FeatureCollection',
         'features': []
     };
 
     for (i in item['features']) {
-        if (item['features'][i]['properties']['COUNTYNAME'] == county_name) {
+        if (item['features'][i]['properties']['COUNTYNAME'] == countyName) {
             if (item['features'][i]['geometry']['type'] == 'Polygon') {
                 let polygon = [];
                 let _coor;
@@ -173,28 +174,39 @@ function mySource(vill_geojson, county_name) {
 function mapCounty(data) {
     var hoverDiv = document.getElementById('hoverDiv');
     var name = document.getElementById('cityName');
+    var ratio = document.getElementById('fillRatio');
     var style = function(feature) { // color
-        let style = getStyle(data, feature.get('COUNTYSN'));
+        let style = getStyle(data, feature.get('COUNTYID'));
         return style;
     };
 
     map.getLayers().getArray()[1].setStyle(style);
-    map.on('pointermove', function(e) {
+    try {
+        map.removeEventListener('pointermove', countyHoverHandler);
+        console.log('Successfully remove countyHover');
+        map.removeEventListener('pointermove', districtHoverHandler);
+        console.log('Successfully remove districtHover');
+    } catch (e) {}
+    map.on('pointermove', countyHoverHandler = function(e) {
         map.forEachFeatureAtPixel(e.pixel, function(f) {
+            console.log(data, f.get('COUNTYID'));
             name.innerHTML = '縣市： ' + f.get('COUNTYNAME');
+            ratio.innerHTML = '填答率： ' + data[f.get('COUNTYID')]['img_ratio'] + '%';
             return true;
         });
     });
 }
 
-function mapDistrict(vill_geojson) {
+function mapDistrict(geojson, data) {
     let select = document.getElementById('countySel');
-    var county_name = select.options[select.selectedIndex].innerHTML;
+    var countyName = select.options[select.selectedIndex].innerHTML;
     var map = document.getElementById('map').data;
     var nameStyle = new ol.style.Style({}); // don't label name
-    var source = mySource(vill_geojson, county_name); // filter county
-    var style = function(feature, data) { // color
-        let style = getStyle(data, feature.get('TOWNID'));
+    var source = mySource(geojson, countyName); // filter county
+    var name = document.getElementById('cityName');
+    var ratio = document.getElementById('fillRatio');
+    var style = function(feature) { // color
+        let style = getStyle(data, feature.get('TOWNCODE'));
         return style;
     };
 
@@ -202,10 +214,17 @@ function mapDistrict(vill_geojson) {
     map.getLayers().getArray()[1].setStyle(style);
     map.getLayers().getArray()[2].setStyle(nameStyle);
 
-    var name = document.getElementById('cityName');
-    map.on('pointermove', function(e) {
+    try {
+        map.removeEventListener('pointermove', countyHoverHandler);
+        console.log('Successfully remove countyHover');
+        map.removeEventListener('pointermove', districtHoverHandler);
+        console.log('Successfully remove districtHover');
+    } catch (e) {}
+    map.on('pointermove', districtHoverHandler = function(e) {
         map.forEachFeatureAtPixel(e.pixel, function(f) {
+            console.log(data, f.get('TOWNCODE'));
             name.innerHTML = '地區： ' + f.get('TOWNNAME');
+            ratio.innerHTML = '填答率： ' + data[f.get('TOWNCODE')]['img_ratio'] + '%';
             return true;
         });
     });

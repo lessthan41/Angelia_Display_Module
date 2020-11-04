@@ -17,7 +17,7 @@ function getAllEvent() {
             option.value = data[i]['event_id'];
             sel.appendChild(option);
         }
-        getEvent();
+        getCountyRatio();
     })
     .catch(function (error) {
         console.log(error);
@@ -28,10 +28,12 @@ function getAllEvent() {
     return true;
 }
 
-function getEvent() {
+function getCountyRatio() {
     let select = document.getElementById('eventSel');
-    let event_idx = select.options[select.selectedIndex].value;
-    let url = 'http://angelia-develop.herokuapp.com/county_status?event_id=' + event_idx;
+    let event_id = select.options[select.selectedIndex].value;
+    let url = 'http://angelia-develop.herokuapp.com/county_status?event_id=' + event_id;
+    document.getElementById('countySel').selectedIndex = 0; // reset county
+    document.getElementById('districtSel').options.length = 1; // reset district
     axios({
         method: 'get',
         url: url,
@@ -50,7 +52,7 @@ function getEvent() {
     return true;
 }
 
-function getCounty() {
+function getCountyList() {
     let url = 'http://angelia-develop.herokuapp.com/county';
     let sel = document.getElementById('countySel');
     axios({
@@ -77,12 +79,13 @@ function getCounty() {
     return true;
 }
 
-function getDistrict() {
+function getDistrictList() {
     let county = document.getElementById('countySel');
     let county_id = county.options[county.selectedIndex].value;
     let url = 'http://angelia-develop.herokuapp.com/district?county_id=' + county_id;
     let select = document.getElementById('districtSel');
     select.options.length = 1; // clear options
+    document.getElementById('districtSel').options.length = 1; // reset district
     axios({
         method: 'get',
         url: url,
@@ -108,7 +111,51 @@ function getDistrict() {
 }
 
 function getDistrictGeojson() {
-    var url = 'https://raw.githubusercontent.com/lessthan41/Angelia_Display_Module/master/asset/TW_Dist_simplified.geojson'
+    let url = 'https://raw.githubusercontent.com/lessthan41/Angelia_Display_Module/master/asset/TW_Dist_simplified.geojson';
+    axios({
+        method: 'get',
+        url: url,
+        responseType: 'json',
+    })
+    .then(function (response) {
+        getDistrictRatio(response.data);
+    })
+    .catch(function (error) {
+        console.log(error);
+    });
+
+    return true;
+}
+
+function getDistrictRatio(geojson) {
+    let data;
+    let event_select = document.getElementById('eventSel');
+    let event_id = event_select.options[event_select.selectedIndex].value;
+    let county_select = document.getElementById('countySel');
+    let county_id = county_select.options[county_select.selectedIndex].value;
+    let url = 'http://angelia-develop.herokuapp.com/district_status?event_id=' + event_id + '&county_id=' + county_id;
+    axios({
+        method: 'get',
+        url: url,
+        responseType: 'json',
+    })
+    .then(function (response) {
+        data = response.data;
+        mapDistrict(geojson, data);
+    })
+    .catch(function (error) {
+        console.log(error);
+    });
+
+    return true;
+}
+
+function getVillageList() {
+    let select = document.getElementById('districtSel');
+    let district_id = select.options[select.selectedIndex].value;
+    let url = 'http://angelia-develop.herokuapp.com/village?district_id=' + district_id;
+    let table = document.getElementById('table');
+    clearTable();
     axios({
         method: 'get',
         url: url,
@@ -116,10 +163,15 @@ function getDistrictGeojson() {
     })
     .then(function (response) {
         let data = response.data;
-        mapDistrict(data);
+        let vill = Object.keys(data);
+        for (c = 0; c < vill.length; c++) {
+            addRow(vill[c], 0, 0);
+        }
+        showTable();
     })
     .catch(function (error) {
         console.log(error);
     });
+
     return true;
 }
