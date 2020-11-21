@@ -9,7 +9,7 @@ function getAllEvent() {
     })
     .then(function (response) {
         sel.options.length = 0; // clear options
-        let data = response.data;
+        let data = response.data.data;
         let option;
         for (i in data) {
             option = document.createElement('option');
@@ -40,7 +40,7 @@ function getCountyRatio() {
         responseType: 'json',
     })
     .then(function (response) {
-        let data = response.data;
+        let data = response.data.data;
         mapCounty(data); // draw county map
     })
     .catch(function (error) {
@@ -61,12 +61,11 @@ function getCountyList() {
         responseType: 'json',
     })
     .then(function (response) {
-        let data = response.data;
-        let counties = Object.keys(data);
-        for (c = 0; c < counties.length; c++) {
+        let data = response.data.data;
+        for (c = 0; c < data.length; c++) {
             let option = document.createElement('option');
-            option.text = counties[c];
-            option.value = data[counties[c]];
+            option.text = data[c]['county_name'];
+            option.value = data[c]['county_id'];
             sel.appendChild(option);
         }
     })
@@ -92,12 +91,11 @@ function getDistrictList() {
         responseType: 'json',
     })
     .then(function (response) {
-        let data = response.data;
-        let district = Object.keys(data);
-        for (c = 0; c < district.length; c++) {
+        let data = response.data.data;
+        for (c = 0; c < data.length; c++) {
             let option = document.createElement('option');
-            option.text = district[c];
-            option.value = data[district[c]];
+            option.text = data[c]['district_name'];
+            option.value = data[c]['district_id'];
             select.appendChild(option);
         }
     })
@@ -112,22 +110,27 @@ function getDistrictList() {
 
 function getDistrictGeojson() {
     let url = 'https://raw.githubusercontent.com/lessthan41/Angelia_Display_Module/master/asset/TW_Dist_simplified.geojson';
-    axios({
-        method: 'get',
-        url: url,
-        responseType: 'json',
-    })
-    .then(function (response) {
-        getDistrictRatio(response.data);
-    })
-    .catch(function (error) {
-        console.log(error);
-    });
+    if (district_geojson == undefined) {
+        axios({
+            method: 'get',
+            url: url,
+            responseType: 'json',
+        })
+        .then(function (response) {
+            district_geojson = response.data;
+            getDistrictRatio();
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+    } else {
+        getDistrictRatio();
+    }
 
     return true;
 }
 
-function getDistrictRatio(geojson) {
+function getDistrictRatio() {
     let data;
     let event_select = document.getElementById('eventSel');
     let event_id = event_select.options[event_select.selectedIndex].value;
@@ -140,8 +143,8 @@ function getDistrictRatio(geojson) {
         responseType: 'json',
     })
     .then(function (response) {
-        data = response.data;
-        mapDistrict(geojson, data);
+        data = response.data.data;
+        mapDistrict(data);
     })
     .catch(function (error) {
         console.log(error);
@@ -162,11 +165,8 @@ function getVillageList() {
         responseType: 'json',
     })
     .then(function (response) {
-        let data = response.data;
-        let vill = Object.keys(data);
-        for (c = 0; c < vill.length; c++) {
-            addRow(vill[c], 0, 0);
-        }
+        let data = response.data.data;
+        addRow(data);
         showTable();
     })
     .catch(function (error) {

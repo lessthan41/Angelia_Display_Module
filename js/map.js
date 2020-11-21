@@ -4,6 +4,32 @@ var view = new ol.View({
     minZoom: 7.2,
     zoom: 7.6
 });
+
+// Geojson
+var county_geojson = new ol.source.Vector({
+    url: 'https://raw.githubusercontent.com/lessthan41/Angelia_Display_Module/master/asset/TW_County.geojson',
+    format: new ol.format.GeoJSON()
+});
+var district_geojson = null;
+
+// Style
+var nameStyle = function(feature) {
+    let style = new ol.style.Style({
+        stroke: new ol.style.Stroke({
+            color: '#c7daf3',
+            width: 1
+        }),
+        text: new ol.style.Text({
+            font: '550 15px 微軟正黑體',
+            fill: new ol.style.Fill({
+                color: 'white'
+            }),
+        })
+    });
+    style.getText().setText(feature.get('COUNTYNAME'));
+    return style;
+}
+
 var rasterLayer = new ol.layer.Tile({
     source: new ol.source.XYZ({
         crossOrigin: 'anonymous',
@@ -16,29 +42,10 @@ var nameLayer = new ol.layer.Vector({
         url: 'https://raw.githubusercontent.com/lessthan41/Angelia_Display_Module/master/asset/TW_County.geojson',
         format: new ol.format.GeoJSON()
     }),
-    style: function(feature) {
-        let style = new ol.style.Style({
-            stroke: new ol.style.Stroke({
-                color: '#c7daf3',
-                width: 1
-            }),
-            text: new ol.style.Text({
-                font: '550 15px 微軟正黑體',
-                fill: new ol.style.Fill({
-                    color: 'white'
-                }),
-            })
-        });
-        style.getText().setText(feature.get('COUNTYNAME'));
-        return style;
-    },
+    style: nameStyle,
 });
 var drawLayer = new ol.layer.Vector({
-    source: new ol.source.Vector({
-        url: 'https://raw.githubusercontent.com/lessthan41/Angelia_Display_Module/master/asset/TW_County.geojson',
-        // url: 'https://raw.githubusercontent.com/lessthan41/Angelia_Display_Module/master/asset/TW_Vill_simplified.geojson',
-        format: new ol.format.GeoJSON()
-    }),
+    source: county_geojson,
 });
 var highlightStyle = new ol.style.Style({
     fill: new ol.style.Fill({
@@ -172,6 +179,7 @@ function mySource(geojson, countyName) {
 }
 
 function mapCounty(data) {
+    var countyRatio;
     var hoverDiv = document.getElementById('hoverDiv');
     var name = document.getElementById('cityName');
     var ratio = document.getElementById('fillRatio');
@@ -180,29 +188,34 @@ function mapCounty(data) {
         return style;
     };
 
+    map.getLayers().getArray()[1].setSource(county_geojson); // Redraw County Geojson
     map.getLayers().getArray()[1].setStyle(style);
+    map.getLayers().getArray()[2].setStyle(nameStyle); // Relabel County Name
+
     try {
         map.removeEventListener('pointermove', countyHoverHandler);
         console.log('Successfully remove countyHover');
         map.removeEventListener('pointermove', districtHoverHandler);
         console.log('Successfully remove districtHover');
     } catch (e) {}
+
     map.on('pointermove', countyHoverHandler = function(e) {
         map.forEachFeatureAtPixel(e.pixel, function(f) {
-            console.log(data, f.get('COUNTYID'));
+            countyRatio = data.find(county => county['county_id'] == f.get('COUNTYID'))['img_ratio'];
             name.innerHTML = '縣市： ' + f.get('COUNTYNAME');
-            ratio.innerHTML = '填答率： ' + data[f.get('COUNTYID')]['img_ratio'] + '%';
+            ratio.innerHTML = '填答率： ' + countyRatio + '%';
             return true;
         });
     });
 }
 
-function mapDistrict(geojson, data) {
-    let select = document.getElementById('countySel');
+function mapDistrict(data) {
+    var districtRatio;
+    var select = document.getElementById('countySel');
     var countyName = select.options[select.selectedIndex].innerHTML;
     var map = document.getElementById('map').data;
-    var nameStyle = new ol.style.Style({}); // don't label name
-    var source = mySource(geojson, countyName); // filter county
+    var emptyNameStyle = new ol.style.Style({}); // don't label name
+    var source = mySource(district_geojson, countyName); // filter county
     var name = document.getElementById('cityName');
     var ratio = document.getElementById('fillRatio');
     var style = function(feature) { // color
@@ -212,7 +225,7 @@ function mapDistrict(geojson, data) {
 
     map.getLayers().getArray()[1].setSource(source);
     map.getLayers().getArray()[1].setStyle(style);
-    map.getLayers().getArray()[2].setStyle(nameStyle);
+    map.getLayers().getArray()[2].setStyle(emptyNameStyle);
 
     try {
         map.removeEventListener('pointermove', countyHoverHandler);
@@ -220,11 +233,15 @@ function mapDistrict(geojson, data) {
         map.removeEventListener('pointermove', districtHoverHandler);
         console.log('Successfully remove districtHover');
     } catch (e) {}
+
+    console.log(data);
+
     map.on('pointermove', districtHoverHandler = function(e) {
         map.forEachFeatureAtPixel(e.pixel, function(f) {
-            console.log(data, f.get('TOWNCODE'));
+            console.log(f.get('TOWNCODE'));
+            districtRatio = data.find(district => district['district_id'] == f.get('TOWNCODE'))['img_ratio'];
             name.innerHTML = '地區： ' + f.get('TOWNNAME');
-            ratio.innerHTML = '填答率： ' + data[f.get('TOWNCODE')]['img_ratio'] + '%';
+            ratio.innerHTML = '填答率： ' + districtRatio + '%';
             return true;
         });
     });

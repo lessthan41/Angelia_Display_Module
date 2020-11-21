@@ -15,17 +15,19 @@ function clearTable() {
     document.getElementById('tbody').innerHTML = '';
 }
 
-function addRow(col1, col2, col3) {
+function addRow(data) {
+    console.log(data);
+    let row, cell, content;
     let tbody = document.getElementById('tbody');
-    let row = tbody.insertRow(tbody.length - 1);
-    let cell1 = row.insertCell(0);
-    let cell2 = row.insertCell(1);
-    let cell3 = row.insertCell(2);
-    cell1.style.textAlign = 'center';
-    cell2.style.textAlign = 'center';
-    cell3.style.textAlign = 'center';
-    cell1.innerHTML = col1;
-    cell2.innerHTML = col2;
-    cell3.innerHTML = col3;
+    for (vid in data) {
+        row = tbody.insertRow(tbody.length - 1);
+        content = new Array(data[vid]['village_name'], 0, 0);
+        for (c = 0; c < 3; c++) {
+            cell = row.insertCell(c);
+            cell.style.textAlign = 'center';
+            cell.innerHTML = content[c];
+        }
+    }
+    // tbody.rows[tbody.rows.length - 1].value = info; // store village id in village name
     return true;
 }
