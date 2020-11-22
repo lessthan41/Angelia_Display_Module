@@ -47,7 +47,7 @@
     </div>
     <div id="tableDiv" class="card">
         <div class="card-body">
-            <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp" id='table'>
+            <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp" id='villTable'>
                 <thead>
                     <tr>
                         <th class="mdl-data-table__cell--non-numeric">村里</th>
@@ -55,26 +55,35 @@
                         <th>詳細填答</th>
                     </tr>
                 </thead>
-                <tbody id='tbody'>
-                    <tr>
-                        <td class="mdl-data-table__cell--non-numeric">Acrylic (Transparent)</td>
-                        <td>25</td>
-                        <td>$2.90</td>
-                    </tr>
-                    <tr>
-                        <td class="mdl-data-table__cell--non-numeric">Plywood (Birch)</td>
-                        <td>50</td>
-                        <td>$1.25</td>
-                    </tr>
-                    <tr>
-                        <td class="mdl-data-table__cell--non-numeric">Laminate (Gold on Blue)</td>
-                        <td>10</td>
-                        <td>$2.35</td>
-                    </tr>
-                </tbody>
+                <tbody id='villTbody'></tbody>
             </table>
         </div>
     </div>
+
+    <!-- Modal -->
+    <dialog class="mdl-dialog" id="villageModal">
+        <button type="button" class='close' id="villageExitBtn"><i class="fas fa-times"></i></button>
+        <h6 class="mdl-dialog__title" class="modalTitle" id='villageModalTitle'>村里填答內容</h6>
+        <div class="mdl-dialog__content">
+            <table class="mdl-data-table mdl-js-data-table mdl-data-table--unselectable mdl-shadow--2dp table" id='modalTable'>
+                <thead>
+                    <tr id='modalTheadTr'>
+                        <th>負責人</th>
+                    </tr>
+                </thead>
+                <tbody id='modalTbody'>
+                </tbody>
+            </table>
+        </div>
+    </dialog>
+    <div id='wall'></div>
+
+    <dialog class="mdl-dialog" id="imageModal">
+        <button type="button" class='close' id="imageExitBtn"><i class="fas fa-times"></i></button>
+        <h6 class="mdl-dialog__title" class="modalTitle">照片內容</h6>
+        <div class="mdl-dialog__content" id='imageDiv'>
+        </div>
+    </dialog>
 
     <!-- MDL -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
@@ -88,8 +97,11 @@
     <!-- BootStrap -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
-    <!-- axios -->
+    <!-- Axios -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <!-- Fontawesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
 
     <!-- my script -->
     <script type="text/javascript" src='./js/index.js'></script>

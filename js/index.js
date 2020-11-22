@@ -19,4 +19,5 @@ function changeCountySel() {
 
 function changeDistrictSel() {
     getVillageList();
+    // enhanceDistrict(); // Todo
 }

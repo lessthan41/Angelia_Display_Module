@@ -1,4 +1,4 @@
-// setting
+// View
 var view = new ol.View({
     center: ol.proj.fromLonLat([121.8, 23.8]),
     minZoom: 7.2,
@@ -30,6 +30,13 @@ var nameStyle = function(feature) {
     return style;
 }
 
+var highlightStyle = new ol.style.Style({
+    fill: new ol.style.Fill({
+        color: 'rgba(149, 196, 187,0.7)',
+    }),
+});
+
+// Layers
 var rasterLayer = new ol.layer.Tile({
     source: new ol.source.XYZ({
         crossOrigin: 'anonymous',
@@ -47,11 +54,8 @@ var nameLayer = new ol.layer.Vector({
 var drawLayer = new ol.layer.Vector({
     source: county_geojson,
 });
-var highlightStyle = new ol.style.Style({
-    fill: new ol.style.Fill({
-        color: 'rgba(149, 196, 187,0.7)',
-    }),
-});
+
+// Map
 var map = new ol.Map({
     target: 'map',
     layers: [rasterLayer, drawLayer, nameLayer],
@@ -128,7 +132,7 @@ function getStyle(data, regionId) {
     );
 }
 
-function mySource(geojson, countyName) {
+function mySource(geojson, countyName) { // Extract Specific County Geojson For Draw
     var feature, vectorSource;
     var item = geojson;
     var new_item = {
@@ -234,11 +238,8 @@ function mapDistrict(data) {
         console.log('Successfully remove districtHover');
     } catch (e) {}
 
-    console.log(data);
-
     map.on('pointermove', districtHoverHandler = function(e) {
         map.forEachFeatureAtPixel(e.pixel, function(f) {
-            console.log(f.get('TOWNCODE'));
             districtRatio = data.find(district => district['district_id'] == f.get('TOWNCODE'))['img_ratio'];
             name.innerHTML = '地區： ' + f.get('TOWNNAME');
             ratio.innerHTML = '填答率： ' + districtRatio + '%';

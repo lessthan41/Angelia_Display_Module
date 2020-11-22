@@ -52,7 +52,7 @@ body {
     margin-bottom: 10px;
 }
 
-/* table */
+/* village table */
 #tableDiv {
     position: absolute;
     right: 10px;
@@ -63,16 +63,20 @@ body {
     box-shadow: 1px 1px 5px #728e97;
     max-height: 380px;
     overflow-y: scroll;
-    transition: .8s ease-in-out;
+    overflow-x: hidden;
+    transition: .4s ease-in-out;
     z-index: 4;
 }
-#table {
+#villTable {
     width: 100%;
     text-align: center;
     margin-left: 3px;
 }
-#table thead th {
+#villTable thead th {
     text-align: center;
+}
+#villTable tbody tr {
+    cursor: pointer;
 }
 
 /* Map */
@@ -101,4 +105,63 @@ body {
     margin-left: 10%;
     margin-top: 3px;
     display: inline-block;
+}
+
+/* Modal */
+#villageModal {
+    top: 20%;
+    width: 70%;
+    max-height: 70%;
+    overflow-y: scroll;
+    z-index: 6;
+    opacity: 0;
+    visibility: hidden;
+    transition-duration: 0.2s;
+}
+#imageModal {
+    top: 10%;
+    width: 70%;
+    height: 70%;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    z-index: 7;
+    opacity: 0;
+    visibility: hidden;
+    transition-duration: 0.2s;
+}
+.subCanvas {
+    display: flex;
+    height: 30%;
+}
+#wall {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 5;
+    background-color: #dadae7;
+    opacity: 0.2;
+    visibility: hidden;
+    transition-duration: 0.2s;
+}
+.modalTitle {
+    font-weight: 900;
+}
+#modalTable thead th {
+    text-align: center;
+}
+#modalTbody tr {
+    cursor: pointer;
+}
+
+/* Image */
+.img {
+    width: 100%;
+    height: 89%;
+    margin-right: 15px;
+    box-shadow: 3px 2px 7px 0px #e3e0e0;
+    border-radius: 8px;
+    background-position: center;
+    background-size: cover;
 }

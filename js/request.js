@@ -157,17 +157,47 @@ function getVillageList() {
     let select = document.getElementById('districtSel');
     let district_id = select.options[select.selectedIndex].value;
     let url = 'http://angelia-develop.herokuapp.com/village?district_id=' + district_id;
-    let table = document.getElementById('table');
-    clearTable();
+    clearTable('villTbody');
     axios({
         method: 'get',
         url: url,
         responseType: 'json',
     })
     .then(function (response) {
-        let data = response.data.data;
-        addRow(data);
+        vill_list = response.data.data;
+        let tbody = document.getElementById('villTbody');
+        for (v in vill_list) {
+            let content = [vill_list[v]['village_name'], 0, 0];
+            addRow('villTbody', content);
+            tbody.rows[tbody.rows.length - 1].onclick = function(item) { // Add Onclick Event
+                let vill = item.target.closest('tr').cells[0].innerHTML;
+                let vid = vill_list.find(element => element['village_name'] == vill)['village_id'];
+                showModal();
+                getVillageDetail(vid);
+            }
+        }
         showTable();
+    })
+    .catch(function (error) {
+        console.log(error);
+    });
+
+    return true;
+}
+
+function getVillageDetail(vid) {
+    let event_select = document.getElementById('eventSel');
+    let event_id = event_select.options[event_select.selectedIndex].value;
+    let url = 'http://angelia-develop.herokuapp.com/detail?event_id=' + event_id + '&village_id=' + vid;
+
+    axios({
+        method: 'get',
+        url: url,
+        responseType: 'json',
+    })
+    .then(function (response) {
+        vill_data = response.data.data;
+        knitTable(vill_data);
     })
     .catch(function (error) {
         console.log(error);
