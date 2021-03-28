@@ -39,7 +39,7 @@ body {
     right: 10px;
     margin: 10px 1px 0px 0px;
     padding-bottom: 20px;
-    width: 400px;
+    width: 500px;
     float: right;
     box-shadow: 1px 1px 5px #728e97;
     height: auto;
@@ -52,7 +52,39 @@ body {
     margin-bottom: 10px;
 }
 
+/* Total Fill */
+#totalFillRatioDiv {
+    position: absolute;
+    width: 198px;
+    z-index: 6;
+    left: 18px;
+    bottom: 15px;
+    pointer-events: none;
+}
+.totalFillRatio {
+    font-size: 40px;
+    margin-left: 15px;
+}
+
+/* Overview Button */
+#overviewButton {
+    position: absolute;
+    height: 45px;
+    z-index: 6;
+    left: 25px;
+    bottom:275px;
+    background-color: #098a04;
+    font-size: 20;
+    font-weight: 700;
+}
+
 /* village table */
+#legend {
+    display: flex;
+    justify-content: space-evenly;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
 #tableDiv {
     position: absolute;
     right: 10px;
@@ -118,7 +150,7 @@ body {
     visibility: hidden;
     transition-duration: 0.2s;
 }
-#imageModal {
+#imageModal, #overviewModal {
     top: 10%;
     width: 70%;
     height: 70%;
@@ -128,6 +160,9 @@ body {
     opacity: 0;
     visibility: hidden;
     transition-duration: 0.2s;
+}
+#overviewTable thead th {
+    text-align: center;
 }
 .subCanvas {
     display: flex;

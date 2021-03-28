@@ -233,9 +233,9 @@ function mapDistrict(data) {
 
     try {
         map.removeEventListener('pointermove', countyHoverHandler);
-        console.log('Successfully remove countyHover');
+        // console.log('Successfully remove countyHover');
         map.removeEventListener('pointermove', districtHoverHandler);
-        console.log('Successfully remove districtHover');
+        // console.log('Successfully remove districtHover');
     } catch (e) {}
 
     map.on('pointermove', districtHoverHandler = function(e) {

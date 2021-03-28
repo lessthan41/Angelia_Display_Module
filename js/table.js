@@ -3,7 +3,7 @@ var vill_data;
 
 function showTable() {
     let table = document.getElementById('tableDiv');
-    table.style.width = 400;
+    table.style.width = 500;
     table.style.visibility = 'visible';
     setTimeout(function() {
         table.style.height = '400px';
@@ -44,7 +44,17 @@ function showImageModal() {
     };
 }
 
-function addRow(id, content) {
+function showOverviewModal() {
+    document.getElementById('overviewModal').style.opacity = '1';
+    document.getElementById('overviewModal').style.visibility = 'visible';
+    document.getElementById('overviewExitBtn').onclick = function() {
+        document.getElementById('overviewModal').style.opacity = '0';
+        document.getElementById('overviewModal').style.visibility = 'hidden';
+        // document.getElementById('overviewDiv').innerHTML = ''; // Clear Overview Div
+    };
+}
+
+function addRow(id, content) { // content: array
     let cell;
     let tbody = document.getElementById(id);
     let row = tbody.insertRow();
@@ -98,10 +108,11 @@ function knitTable(data) {
                             break;
                         case '所有照片':
                             let content;
-                            thead.innerHTML = '<th>批次</th><th>時間</th><th>地點</th><th>描述</th>';
+                            thead.innerHTML = '<th>批次</th><th>類型</th><th>時間</th><th>地點</th><th>描述</th>';
                             for (no in data[person]['img']) {
                                 content = new Array(
-                                    parseInt(no) + 1, data[person]['img'][no]['time'],
+                                    parseInt(no) + 1, data[person]['img'][no]['cat'],
+                                    data[person]['img'][no]['time'],
                                     data[person]['img'][no]['location'][0],
                                     data[person]['img'][no]['description']
                                 );

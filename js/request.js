@@ -17,13 +17,35 @@ function getAllEvent() {
             option.value = data[i]['event_id'];
             sel.appendChild(option);
         }
+        getTotalRatio();
         getCountyRatio();
     })
     .catch(function (error) {
-        console.log(error);
+        console.log(url);
     })
     .finally(function () {
         // console.log('I always Execued');
+    });
+    return true;
+}
+
+function getTotalRatio() {
+    let select = document.getElementById('eventSel');
+    let event_id = select.options[select.selectedIndex].value;
+    let url = 'https://angelia-develop.herokuapp.com/province_status?event_id=' + event_id;
+    axios({
+        method: 'get',
+        url: url,
+        responseType: 'json',
+    })
+    .then(function (response) {
+        let data = response.data.data;
+        document.getElementById('totalPreFillRatio').innerHTML = data['pre_ratio'] + ' %';
+        document.getElementById('totalIntraFillRatio').innerHTML = data['intra_ratio'] + ' %';
+        document.getElementById('totalImageFillRatio').innerHTML = data['img_ratio'] + ' %';
+    })
+    .catch(function (error) {
+        console.log(url);
     });
     return true;
 }
@@ -41,10 +63,11 @@ function getCountyRatio() {
     })
     .then(function (response) {
         let data = response.data.data;
+        overview(data); // update overview list
         mapCounty(data); // draw county map
     })
     .catch(function (error) {
-        console.log(error);
+        console.log(url);
     })
     .finally(function () {
         // console.log('I always Execued');
@@ -70,7 +93,7 @@ function getCountyList() {
         }
     })
     .catch(function (error) {
-        console.log(error);
+        console.log(url);
     })
     .finally(function () {
         // console.log('I always Execued');
@@ -100,7 +123,7 @@ function getDistrictList() {
         }
     })
     .catch(function (error) {
-        console.log(error);
+        console.log(url);
     })
     .finally(function () {
         // console.log('I always Execued');
@@ -121,7 +144,7 @@ function getDistrictGeojson() {
             getDistrictRatio();
         })
         .catch(function (error) {
-            console.log(error);
+            console.log(url);
         });
     } else {
         getDistrictRatio();
@@ -147,16 +170,18 @@ function getDistrictRatio() {
         mapDistrict(data);
     })
     .catch(function (error) {
-        console.log(error);
+        console.log(url);
     });
 
     return true;
 }
 
 function getVillageList() {
+    let event_select = document.getElementById('eventSel');
+    let event_id = event_select.options[event_select.selectedIndex].value;
     let select = document.getElementById('districtSel');
     let district_id = select.options[select.selectedIndex].value;
-    let url = 'https://angelia-develop.herokuapp.com/village?district_id=' + district_id;
+    let url = 'https://angelia-develop.herokuapp.com/village?event_id=' + event_id + '&district_id=' + district_id;
     clearTable('villTbody');
     axios({
         method: 'get',
@@ -165,12 +190,35 @@ function getVillageList() {
     })
     .then(function (response) {
         vill_list = response.data.data;
-        let tbody = document.getElementById('villTbody');
+        let tbody = document.getElementById('villTbody'),
+            alert_A = '<i class="fas fa-exclamation-triangle" style="color: rgb(255,0,0)"></i>',
+            alert_B = '<i class="fas fa-exclamation-triangle" style="color: rgb(255,153,51)"></i>',
+            alert_C = '<i class="fas fa-exclamation-triangle" style="color: rgb(255,255,0)"></i>',
+            check_A = '<i class="fas fa-check-square" style="font-size: large;"></i>',
+            check_B = '<i class="far fa-square" style="font-size: large;"></i>';
+
         for (v in vill_list) {
-            let content = [vill_list[v]['village_name'], 0, 0];
+            let alert = '', check = '';
+            if (vill_list[v]['slv_none'])
+                alert += '-';
+            else {
+                if (vill_list[v]['slv_A'])
+                    alert += alert_A;
+                if (vill_list[v]['slv_B'])
+                    alert += ' ' + alert_B;
+                if (vill_list[v]['slv_C'])
+                    alert += ' ' + alert_C;
+            }
+
+            if (vill_list[v]['is_active'])
+                check = check_A;
+            else
+                check = check_B;
+
+            let content = [alert, vill_list[v]['village_name'], vill_list[v]['user_name'], check];
             addRow('villTbody', content);
             tbody.rows[tbody.rows.length - 1].onclick = function(item) { // Add Onclick Event
-                let vill = item.target.closest('tr').cells[0].innerHTML;
+                let vill = item.target.closest('tr').cells[1].innerHTML;
                 let vid = vill_list.find(element => element['village_name'] == vill)['village_id'];
                 showModal();
                 getVillageDetail(vid);
@@ -179,7 +227,7 @@ function getVillageList() {
         showTable();
     })
     .catch(function (error) {
-        console.log(error);
+        console.log(url);
     });
 
     return true;
@@ -200,7 +248,7 @@ function getVillageDetail(vid) {
         knitTable(vill_data);
     })
     .catch(function (error) {
-        console.log(error);
+        console.log(url);
     });
 
     return true;

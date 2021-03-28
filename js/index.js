@@ -1,6 +1,7 @@
 window.onload = function() {
     getAllEvent();
     getCountyList();
+    // getTotalRatio();
     document.body.style.visibility = 'visible';
 };
 
