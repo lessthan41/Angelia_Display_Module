@@ -7,6 +7,7 @@ window.onload = function() {
 
 function changeEventSel() {
     getCountyRatio();
+    getTotalRatio();
     globalScope();
     hideTable();
 }

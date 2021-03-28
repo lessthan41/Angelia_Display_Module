@@ -6,9 +6,9 @@ function overview(data) {
     let county, pre, intra, img;
     for (i in data) {
         county = data[i]['county_name'];
-        pre = data[i]['pre_ratio'] + '%';
-        intra = data[i]['intra_ratio'] + '%';
-        img = data[i]['img_ratio'] + '%';
+        pre = data[i]['pre_ratio'] * 100 + '%';
+        intra = data[i]['intra_ratio'] * 100 + '%';
+        img = data[i]['img_ratio'] * 100 + '%';
         addRow(OVERVIEW_TABLE_ID, [county, pre, intra, img]);
     }
 }

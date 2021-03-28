@@ -40,9 +40,9 @@ function getTotalRatio() {
     })
     .then(function (response) {
         let data = response.data.data;
-        document.getElementById('totalPreFillRatio').innerHTML = data['pre_ratio'] + ' %';
-        document.getElementById('totalIntraFillRatio').innerHTML = data['intra_ratio'] + ' %';
-        document.getElementById('totalImageFillRatio').innerHTML = data['img_ratio'] + ' %';
+        document.getElementById('totalPreFillRatio').innerHTML = data['pre_ratio'] * 100 + ' %';
+        document.getElementById('totalIntraFillRatio').innerHTML = data['intra_ratio'] * 100 + ' %';
+        document.getElementById('totalImageFillRatio').innerHTML = data['img_ratio'] * 100 + ' %';
     })
     .catch(function (error) {
         console.log(url);
